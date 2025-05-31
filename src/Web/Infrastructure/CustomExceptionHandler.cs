@@ -14,6 +14,7 @@ public class CustomExceptionHandler : IExceptionHandler
         _exceptionHandlers = new()
         {
             { typeof(ValidationException), HandleValidationException },
+            { typeof(ArgumentNullException), HandleArgumentNullException },
             { typeof(NotFoundException), HandleNotFoundException },
             { typeof(UnauthorizedAccessException), HandleUnauthorizedAccessException },
             { typeof(ForbiddenAccessException), HandleForbiddenAccessException },
@@ -44,6 +45,20 @@ public class CustomExceptionHandler : IExceptionHandler
         {
             Status = StatusCodes.Status400BadRequest,
             Type = "https://tools.ietf.org/html/rfc7231#section-6.5.1"
+        });
+    }
+
+    private async Task HandleArgumentNullException(HttpContext httpContext, Exception ex)
+    {
+        var exception = (ArgumentNullException)ex;
+        
+        httpContext.Response.StatusCode = StatusCodes.Status400BadRequest;
+
+        await httpContext.Response.WriteAsJsonAsync(new ValidationProblemDetails()
+        {
+            Status = StatusCodes.Status400BadRequest,
+            Type = "https://tools.ietf.org/html/rfc7231#section-6.5.1",
+            Title = "There's empty required fields!"
         });
     }
 
