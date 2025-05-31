@@ -73,11 +73,6 @@ public static class DependencyInjection
 
         builder.Services.AddAuthorization(options =>
         {
-            // Default Policy
-            options.AddPolicy(Policies.User, policy => policy.RequireRole(Roles.User));
-            options.AddPolicy(Policies.Administrator, policy => policy.RequireRole(Roles.Administrator));
-            options.AddPolicy(Policies.Player, policy => policy.RequireRole(Roles.Player));
-            
             // Spesific Policy
             options.AddPolicy(Policies.CanPurge, policy => policy.RequireRole(Roles.Administrator));
         });
