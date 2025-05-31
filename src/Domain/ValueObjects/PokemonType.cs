@@ -50,7 +50,7 @@ public class PokemonType(string name) : ValueObject
         return Name;
     }
 
-    protected static IEnumerable<PokemonType> SupportedTypes
+    public static IEnumerable<PokemonType> SupportedTypes
     {
         get
         {
@@ -79,9 +79,4 @@ public class PokemonType(string name) : ValueObject
     {
         yield return Name;
     }
-}
-
-public class UnsupportedPokemonTypeException(string typeName) : Exception
-{
-    public override string Message => $"The Pokémon type '{typeName}' is not supported.";
 }
