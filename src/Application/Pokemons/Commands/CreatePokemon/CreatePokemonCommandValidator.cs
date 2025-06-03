@@ -1,4 +1,5 @@
 ﻿using FluentValidation.Validators;
+using PokemonInHomeAPI.Application.Common.Interfaces;
 using PokemonInHomeAPI.Domain.Constants;
 using PokemonInHomeAPI.Domain.ValueObjects;
 
@@ -6,57 +7,71 @@ namespace PokemonInHomeAPI.Application.Pokemons.Commands.CreatePokemon;
 
 public class CreatePokemonCommandValidator : AbstractValidator<CreatePokemonCommand>
 {
-    public CreatePokemonCommandValidator()
+    private readonly IApplicationDbContext _context;
+    public CreatePokemonCommandValidator(IApplicationDbContext context)
     {
+        _context = context;
+        
         RuleFor(v => v.Name)
-            .MaximumLength(255)
-            .WithMessage(string.Format(ErrorMessage.AttributeLengthError, "Name", 255))
             .NotEmpty()
-            .WithMessage(string.Format(ErrorMessage.EmptyAttributeError, "Name"));
+            .WithMessage(ValidationMessage.RequiredMessage)
+            .MaximumLength(255)
+            .WithMessage(ValidationMessage.MaxLength255Message)
+            .MustAsync(BeUniqueName)
+            .WithMessage(ValidationMessage.UniqueMessage)
+            .WithErrorCode("Unique");
         
         RuleFor(v => v.Type1)
-            .NotEmpty().WithMessage(string.Format(ErrorMessage.EmptyAttributeError, "Type1"))
+            .NotEmpty()
+            .WithMessage(ValidationMessage.RequiredMessage)
             .Must(t => PokemonType.SupportedTypes.Any(st => st.Name == t))
-            .WithMessage(string.Format(ErrorMessage.PokemonUnsupportedError, "Type1"));
+            .WithMessage(ValidationMessage.UnsupportedTypeMessage);
         
         RuleFor(v => v.Type2)
             .Must(t => t == null || PokemonType.SupportedTypes.Any(st => st.Name == t))
-            .WithMessage(string.Format(ErrorMessage.PokemonUnsupportedError, "Type2"));
+            .WithMessage(ValidationMessage.UnsupportedTypeMessage);
 
         RuleFor(v => v.BaseHp)
             .GreaterThan(0)
-            .WithMessage(string.Format(ErrorMessage.MustPositiveAttributeError, "BaseHp"))
+            .WithMessage(ValidationMessage.PositiveMessage)
             .LessThanOrEqualTo(255)
-            .WithMessage(string.Format(ErrorMessage.LessThanOrEqualToAttributeError, "BaseHp", 255));
+            .WithMessage(ValidationMessage.MaxValue255Message);
         
         RuleFor(v => v.BaseAttack)
             .GreaterThan(0)
-            .WithMessage(string.Format(ErrorMessage.MustPositiveAttributeError, "BaseAttack"))
+            .WithMessage(ValidationMessage.PositiveMessage)
             .LessThanOrEqualTo(255)
-            .WithMessage(string.Format(ErrorMessage.LessThanOrEqualToAttributeError, "BaseAttack", 255));
+            .WithMessage(ValidationMessage.MaxValue255Message);
         
         RuleFor(v => v.BaseDefense)
             .GreaterThan(0)
-            .WithMessage(string.Format(ErrorMessage.MustPositiveAttributeError, "BaseDefence"))
+            .WithMessage(ValidationMessage.PositiveMessage)
             .LessThanOrEqualTo(255)
-            .WithMessage(string.Format(ErrorMessage.LessThanOrEqualToAttributeError, "BaseDefence", 255));;
+            .WithMessage(ValidationMessage.MaxValue255Message);
         
         RuleFor(v => v.BaseSpecialAttack)
             .GreaterThan(0)
-            .WithMessage(string.Format(ErrorMessage.MustPositiveAttributeError, "BaseSpecialAttack"))
+            .WithMessage(ValidationMessage.PositiveMessage)
             .LessThanOrEqualTo(255)
-            .WithMessage(string.Format(ErrorMessage.LessThanOrEqualToAttributeError, "BaseSpecialAttack", 255));;
+            .WithMessage(ValidationMessage.MaxValue255Message);
         
         RuleFor(v => v.BaseSpecialDefense)
             .GreaterThan(0)
-            .WithMessage(string.Format(ErrorMessage.MustPositiveAttributeError, "BaseSpecialDefence"))
+            .WithMessage(ValidationMessage.PositiveMessage)
             .LessThanOrEqualTo(255)
-            .WithMessage(string.Format(ErrorMessage.LessThanOrEqualToAttributeError, "BaseSpecialDefence", 255));;
+            .WithMessage(ValidationMessage.MaxValue255Message);
         
         RuleFor(v => v.BaseSpeed)
             .GreaterThan(0)
-            .WithMessage(string.Format(ErrorMessage.MustPositiveAttributeError, "BaseSpeed"))
+            .WithMessage(ValidationMessage.PositiveMessage)
             .LessThanOrEqualTo(255)
-            .WithMessage(string.Format(ErrorMessage.LessThanOrEqualToAttributeError, "BaseSpeed", 255));
+            .WithMessage(ValidationMessage.MaxValue255Message);
+    }
+    
+    public async Task<bool> BeUniqueName(CreatePokemonCommand model, string name,
+        CancellationToken cancellationToken)
+    {
+        return !await _context.PokemonSpecies
+            .AnyAsync(ps => ps.Name == name, cancellationToken);
     }
 }
