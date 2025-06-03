@@ -1,0 +1,38 @@
+using PokemonInHomeAPI.Application.Common.Interfaces;
+using PokemonInHomeAPI.Application.Common.Mappings;
+using PokemonInHomeAPI.Application.Common.Models;
+using PokemonInHomeAPI.Application.Pokemons.Queries.GetPokemons;
+using PokemonInHomeAPI.Application.TodoItems.Queries.GetTodoItemsWithPagination;
+
+namespace PokemonInHomeAPI.Application.Pokemons.Queries.GetPokemons;
+
+public record GetPokemonsWithPaginationQuery : IRequest<PaginatedList<PokemonDto>>
+{
+    public int PokemonId { get; init; }
+    public int PageNumber { get; init; } = 1;
+    public int PageSize { get; init; } = 10;
+}
+
+public class
+    GetPokemonsWithPaginationQueryHandler : IRequestHandler<GetPokemonsWithPaginationQuery,
+    PaginatedList<PokemonDto>>
+{
+    private readonly IApplicationDbContext _context;
+    private readonly IMapper _mapper;
+
+    public GetPokemonsWithPaginationQueryHandler(IApplicationDbContext context, IMapper mapper)
+    {
+        _context = context;
+        _mapper = mapper;
+    }
+
+    public async Task<PaginatedList<PokemonDto>> Handle(GetPokemonsWithPaginationQuery request,
+        CancellationToken cancellationToken)
+    {
+        return await _context.PokemonSpecies
+            .Where(x => x.Id == request.PokemonId)
+            .OrderBy(x => x.Name)
+            .ProjectTo<PokemonDto>(_mapper.ConfigurationProvider)
+            .PaginatedListAsync(request.PageNumber, request.PageSize, cancellationToken);
+    }
+}
