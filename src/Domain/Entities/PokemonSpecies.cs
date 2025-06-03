@@ -4,7 +4,7 @@ public class PokemonSpecies : BaseAuditableEntity
 {
     public string Name { get; set; } = string.Empty;
 
-    public PokemonType Type1 { get; set; } = new PokemonType("Unknown");
+    public PokemonType Type1 { get; set; } = PokemonType.Unknown;
     
     public PokemonType? Type2 { get; set; }
     

@@ -4,7 +4,7 @@ public class Move : BaseAuditableEntity
 {
     public string Name { get; set; } = string.Empty;
     
-    public PokemonType Type { get; set; } = new PokemonType("Unknown");
+    public PokemonType Type { get; set; } = PokemonType.Unknown;
     
     public int? Power { get; set; }
     

@@ -14,6 +14,7 @@ public class PokemonType(string name) : ValueObject
         return pokemonType;
     }
 
+    public static PokemonType Unknown => new("Unknown");
     public static PokemonType Normal => new("Normal");
     public static PokemonType Fire => new("Fire");
     public static PokemonType Water => new("Water");
@@ -54,6 +55,7 @@ public class PokemonType(string name) : ValueObject
     {
         get
         {
+            yield return Unknown;
             yield return Normal;
             yield return Fire;
             yield return Water;
