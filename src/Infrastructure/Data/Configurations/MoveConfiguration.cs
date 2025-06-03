@@ -1,4 +1,5 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using System.ComponentModel.DataAnnotations;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 using PokemonInHomeAPI.Domain.Entities;
 
@@ -13,9 +14,13 @@ public class MoveConfiguration : IEntityTypeConfiguration<Move>
         builder.Property(m => m.Name)
             .IsRequired()
             .HasMaxLength(50);
-
-        builder.Property(m => m.Type)
-            .IsRequired();
+        
+        builder.OwnsOne(m => m.Type, type =>
+        {
+            type.Property(t => t.Name)
+                .HasColumnType("text")
+                .IsRequired();
+        });
 
         builder.Property(m => m.Power);
 

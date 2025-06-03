@@ -17,9 +17,20 @@ public class PokemonSpeciesConfiguration : IEntityTypeConfiguration<PokemonSpeci
         builder.Property(p => p.Name)
             .HasMaxLength(50)
             .IsRequired();
-
-        builder.Property(p => p.Type1)
-            .IsRequired();
+        
+        builder.OwnsOne(p => p.Type1, type =>
+        {
+            type.Property(t => t.Name)
+                .IsRequired()
+                .HasColumnType("text")
+                .IsRequired();
+        });
+        
+        builder.OwnsOne(p => p.Type2, type =>
+        {
+            type.Property(t => t.Name)
+                .HasColumnType("text");
+        });
 
         builder.Property(p => p.BaseHp)
             .IsRequired();
