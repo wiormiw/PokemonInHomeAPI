@@ -1,5 +1,4 @@
-﻿using FluentValidation.Validators;
-using PokemonInHomeAPI.Application.Common.Interfaces;
+﻿using PokemonInHomeAPI.Application.Common.Interfaces;
 using PokemonInHomeAPI.Domain.Constants;
 using PokemonInHomeAPI.Domain.ValueObjects;
 

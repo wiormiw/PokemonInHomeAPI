@@ -1,11 +1,8 @@
 using PokemonInHomeAPI.Domain.Entities;
+using PokemonInHomeAPI.Application.Common.Interfaces;
+using PokemonInHomeAPI.Application.Common.Security;
 
 namespace PokemonInHomeAPI.Application.Pokemons.Queries.GetPokemons;
-
-using PokemonInHomeAPI.Application.Common.Interfaces;
-using PokemonInHomeAPI.Application.Common.Mappings;
-using PokemonInHomeAPI.Application.Common.Models;
-using PokemonInHomeAPI.Application.Common.Security;
 
 [Authorize]
 public record GetPokemonQuery : IRequest<PokemonDto>

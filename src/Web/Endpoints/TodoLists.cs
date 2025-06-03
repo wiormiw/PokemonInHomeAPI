@@ -3,7 +3,6 @@ using PokemonInHomeAPI.Application.TodoLists.Commands.DeleteTodoList;
 using PokemonInHomeAPI.Application.TodoLists.Commands.UpdateTodoList;
 using PokemonInHomeAPI.Application.TodoLists.Queries.GetTodos;
 using Microsoft.AspNetCore.Http.HttpResults;
-using PokemonInHomeAPI.Domain.Constants;
 
 namespace PokemonInHomeAPI.Web.Endpoints;
 

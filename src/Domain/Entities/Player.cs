@@ -1,6 +1,4 @@
-﻿using System.ComponentModel.DataAnnotations;
-
-namespace PokemonInHomeAPI.Domain.Entities;
+﻿namespace PokemonInHomeAPI.Domain.Entities;
 
 public class Player : BaseAuditableEntity
 {

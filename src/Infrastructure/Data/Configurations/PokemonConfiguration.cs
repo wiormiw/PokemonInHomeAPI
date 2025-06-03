@@ -2,6 +2,8 @@
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 using PokemonInHomeAPI.Domain.Entities;
 
+namespace PokemonInHomeAPI.Infrastructure.Data.Configurations;
+
 public class PokemonConfiguration : IEntityTypeConfiguration<Pokemon>
 {
     public void Configure(EntityTypeBuilder<Pokemon> builder)

@@ -4,10 +4,6 @@ using PokemonInHomeAPI.Domain.Entities;
 
 namespace PokemonInHomeAPI.Infrastructure.Data.Configurations;
 
-using Microsoft.EntityFrameworkCore;
-using Microsoft.EntityFrameworkCore.Metadata.Builders;
-using PokemonInHomeAPI.Domain.Entities;
-
 public class PokemonSpeciesConfiguration : IEntityTypeConfiguration<PokemonSpecies>
 {
     public void Configure(EntityTypeBuilder<PokemonSpecies> builder)

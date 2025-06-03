@@ -5,7 +5,6 @@ using PokemonInHomeAPI.Application.TodoItems.Commands.UpdateTodoItem;
 using PokemonInHomeAPI.Application.TodoItems.Commands.UpdateTodoItemDetail;
 using PokemonInHomeAPI.Application.TodoItems.Queries.GetTodoItemsWithPagination;
 using Microsoft.AspNetCore.Http.HttpResults;
-using PokemonInHomeAPI.Domain.Constants;
 
 namespace PokemonInHomeAPI.Web.Endpoints;
 
