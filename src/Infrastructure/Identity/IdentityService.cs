@@ -2,7 +2,6 @@ using PokemonInHomeAPI.Application.Common.Interfaces;
 using PokemonInHomeAPI.Application.Common.Models;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
-using Microsoft.EntityFrameworkCore;
 using PokemonInHomeAPI.Domain.Entities;
 using PokemonInHomeAPI.Infrastructure.Data;
 
