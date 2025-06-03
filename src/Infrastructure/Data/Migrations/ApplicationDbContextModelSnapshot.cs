@@ -262,7 +262,7 @@ namespace PokemonInHomeAPI.Infrastructure.Data.Migrations
 
                     NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
 
-                    b.Property<int?>("Accuracy")
+                    b.Property<int>("Accuracy")
                         .HasPrecision(3)
                         .HasColumnType("integer");
 
@@ -283,7 +283,7 @@ namespace PokemonInHomeAPI.Infrastructure.Data.Migrations
                         .HasMaxLength(50)
                         .HasColumnType("character varying(50)");
 
-                    b.Property<int?>("Power")
+                    b.Property<int>("Power")
                         .HasColumnType("integer");
 
                     b.Property<int>("Pp")
