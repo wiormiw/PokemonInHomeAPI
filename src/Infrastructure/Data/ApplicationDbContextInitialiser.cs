@@ -115,8 +115,15 @@ public class ApplicationDbContextInitialiser
             await _userManager.CreateAsync(player, "Player1!");
             if (!string.IsNullOrWhiteSpace(userRole.Name) && !string.IsNullOrWhiteSpace(playerRole.Name))
             {
+                var playerData = new Player { ApplicationUserId = player.Id};
+            
+                // Attach Player as Extended Identity User
+                await _context.Players.AddAsync(playerData);
+                await _context.SaveChangesAsync();
+                
                 await _userManager.AddToRolesAsync(player, new[] {  userRole.Name, playerRole.Name });
             }
+            
         }
 
         // Default data
