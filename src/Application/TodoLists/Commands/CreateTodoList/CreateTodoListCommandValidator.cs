@@ -1,4 +1,5 @@
 ﻿using PokemonInHomeAPI.Application.Common.Interfaces;
+using PokemonInHomeAPI.Domain.Constants;
 
 namespace PokemonInHomeAPI.Application.TodoLists.Commands.CreateTodoList;
 
@@ -14,7 +15,7 @@ public class CreateTodoListCommandValidator : AbstractValidator<CreateTodoListCo
             .NotEmpty()
             .MaximumLength(200)
             .MustAsync(BeUniqueTitle)
-            .WithMessage("'{PropertyName}' must be unique.")
+            .WithMessage(ValidationMessage.UniqueMessage)
             .WithErrorCode("Unique");
     }
 
