@@ -6,9 +6,9 @@ public class Move : BaseAuditableEntity
     
     public PokemonType Type { get; set; } = PokemonType.Unknown;
     
-    public int? Power { get; set; }
+    public int Power { get; set; }
     
-    public int? Accuracy { get; set; }
+    public int Accuracy { get; set; }
 
     public int Pp { get; set; }
     
