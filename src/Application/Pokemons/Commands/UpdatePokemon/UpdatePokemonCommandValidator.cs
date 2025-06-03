@@ -28,11 +28,11 @@ public class UpdatePokemonCommandValidator : AbstractValidator<UpdatePokemonComm
         RuleFor(v => v.Type1)
             .NotEmpty()
             .WithMessage(ValidationMessage.RequiredMessage)
-            .Must(t => t == null || PokemonType.SupportedTypes.Any(st => st.Name == t))
+            .Must(t => t is null || PokemonType.SupportedTypes.Any(st => st.Name == t))
             .WithMessage(ValidationMessage.UnsupportedTypeMessage);
 
         RuleFor(v => v.Type2)
-            .Must(t => t == null || PokemonType.SupportedTypes.Any(st => st.Name == t))
+            .Must(t => t is null || PokemonType.SupportedTypes.Any(st => st.Name == t))
             .WithMessage(ValidationMessage.UnsupportedTypeMessage);
 
         RuleFor(v => v.BaseHp)

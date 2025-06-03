@@ -34,10 +34,10 @@ public class UpdateMoveCommandHandler : IRequestHandler<UpdateMoveCommand>
         
         Guard.Against.NotFound(request.Id, entity);
 
-        if (request.Name != null)
+        if (request.Name is not null)
             entity.Name = request.Name;
         
-        if (request.Type != null)
+        if (request.Type is not null)
             entity.Type = PokemonType.From(request.Type);
         
         if (request.Power.HasValue)

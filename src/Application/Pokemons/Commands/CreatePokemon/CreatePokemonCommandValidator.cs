@@ -27,7 +27,7 @@ public class CreatePokemonCommandValidator : AbstractValidator<CreatePokemonComm
             .WithMessage(ValidationMessage.UnsupportedTypeMessage);
         
         RuleFor(v => v.Type2)
-            .Must(t => t == null || PokemonType.SupportedTypes.Any(st => st.Name == t))
+            .Must(t => t is null || PokemonType.SupportedTypes.Any(st => st.Name == t))
             .WithMessage(ValidationMessage.UnsupportedTypeMessage);
 
         RuleFor(v => v.BaseHp)

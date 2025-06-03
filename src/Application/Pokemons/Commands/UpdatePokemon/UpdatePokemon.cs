@@ -45,13 +45,13 @@ public class UpdatePokemonCommandHandler : IRequestHandler<UpdatePokemonCommand>
         
         Guard.Against.NotFound(request.Id, entity);
         
-        if (request.Name != null)
+        if (request.Name is not null)
             entity.Name = request.Name;
 
-        if (request.Type1 != null)
+        if (request.Type1 is not null)
             entity.Type1 = PokemonType.From(request.Type1);
 
-        if (request.Type2 != null)
+        if (request.Type2 is not null)
             entity.Type2 = PokemonType.From(request.Type2);
         else if (request.Type2 == null)
             entity.Type2 = null;
