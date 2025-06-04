@@ -1,11 +1,13 @@
 ﻿using PokemonInHomeAPI.Domain.Constants;
 using PokemonInHomeAPI.Domain.Entities;
 using PokemonInHomeAPI.Infrastructure.Identity;
+using PokemonInHomeAPI.Infrastructure.Helper.PokemonHelper;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
+using PokemonInHomeAPI.Domain.ValueObjects;
 
 namespace PokemonInHomeAPI.Infrastructure.Data;
 
@@ -94,6 +96,62 @@ public class ApplicationDbContextInitialiser
         {
             await _roleManager.CreateAsync(playerRole);
         }
+        
+        // Pokemon species seeding
+        if (!_context.PokemonSpecies.Any())
+        {
+            var species = new List<PokemonSpecies>
+            {
+                new PokemonSpecies
+                {
+                    Name = "Bulbasaur",
+                    Type1 = PokemonType.Grass,
+                    Type2 = PokemonType.Poison,
+                    BaseHp = 45,
+                    BaseAttack = 49,
+                    BaseDefense = 49,
+                    BaseSpecialAttack = 65,
+                    BaseSpecialDefense = 65,
+                    BaseSpeed = 45
+                },
+                new PokemonSpecies
+                {
+                    Name = "Charmander",
+                    Type1 = PokemonType.Fire,
+                    BaseHp = 39,
+                    BaseAttack = 52,
+                    BaseDefense = 43,
+                    BaseSpecialAttack = 60,
+                    BaseSpecialDefense = 50,
+                    BaseSpeed = 65
+                },
+                new PokemonSpecies
+                {
+                    Name = "Squirtle",
+                    Type1 = PokemonType.Water,
+                    BaseHp = 44,
+                    BaseAttack = 48,
+                    BaseDefense = 65,
+                    BaseSpecialAttack = 50,
+                    BaseSpecialDefense = 64,
+                    BaseSpeed = 43
+                },
+                new PokemonSpecies
+                {
+                    Name = "Pikachu",
+                    Type1 = PokemonType.Electric,
+                    BaseHp = 35,
+                    BaseAttack = 55,
+                    BaseDefense = 40,
+                    BaseSpecialAttack = 50,
+                    BaseSpecialDefense = 50,
+                    BaseSpeed = 90
+                }
+            };
+
+            _context.PokemonSpecies.AddRange(species);
+            await _context.SaveChangesAsync();
+        }
 
         // Default users
         var administrator = new ApplicationUser 
@@ -119,6 +177,10 @@ public class ApplicationDbContextInitialiser
             
                 // Attach Player as Extended Identity User
                 await _context.Players.AddAsync(playerData);
+                await _context.SaveChangesAsync();
+                
+                // Attach Empty Pokedex with player
+                await PokemonHelperInitializer.AddEmptyPokedexForPlayerAsync(_context, playerData.Id);
                 await _context.SaveChangesAsync();
                 
                 await _userManager.AddToRolesAsync(player, new[] {  userRole.Name, playerRole.Name });
