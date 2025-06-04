@@ -4,6 +4,7 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using PokemonInHomeAPI.Domain.Entities;
 using PokemonInHomeAPI.Infrastructure.Data;
+using PokemonInHomeAPI.Infrastructure.Helper.PokemonHelper;
 
 namespace PokemonInHomeAPI.Infrastructure.Identity;
 
@@ -46,8 +47,13 @@ public class IdentityService : IIdentityService
         if (result.Succeeded)
         {
             var playerData = new Player { ApplicationUserId = user.Id};
-            
+
+            // Attach Player Data with Identity User
             await _context.Players.AddAsync(playerData);
+            await _context.SaveChangesAsync();
+            
+            // Attach Empty Pokedex with Player
+            await PokemonHelperInitializer.AddEmptyPokedexForPlayerAsync(_context, playerData.Id);
             await _context.SaveChangesAsync();
         }
         
