@@ -20,6 +20,8 @@ public class Pokemon : BaseAuditableEntity
     
     public int EvHp { get; set; }
     
+    public int EvAttack { get; set; }
+    
     public int EvDefense { get; set; }
     
     public int EvSpecialAttack { get; set; }
