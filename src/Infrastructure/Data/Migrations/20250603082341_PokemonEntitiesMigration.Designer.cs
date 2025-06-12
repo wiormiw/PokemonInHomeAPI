@@ -2,6 +2,7 @@
 using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 using PokemonInHomeAPI.Infrastructure.Data;
@@ -11,9 +12,11 @@ using PokemonInHomeAPI.Infrastructure.Data;
 namespace PokemonInHomeAPI.Infrastructure.Data.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20250603082341_PokemonEntitiesMigration")]
+    partial class PokemonEntitiesMigration
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -262,7 +265,7 @@ namespace PokemonInHomeAPI.Infrastructure.Data.Migrations
 
                     NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
 
-                    b.Property<int>("Accuracy")
+                    b.Property<int?>("Accuracy")
                         .HasPrecision(3)
                         .HasColumnType("integer");
 
@@ -283,7 +286,7 @@ namespace PokemonInHomeAPI.Infrastructure.Data.Migrations
                         .HasMaxLength(50)
                         .HasColumnType("character varying(50)");
 
-                    b.Property<int>("Power")
+                    b.Property<int?>("Power")
                         .HasColumnType("integer");
 
                     b.Property<int>("Pp")
@@ -436,9 +439,6 @@ namespace PokemonInHomeAPI.Infrastructure.Data.Migrations
                         .HasColumnType("text");
 
                     b.Property<int>("CurrentHp")
-                        .HasColumnType("integer");
-
-                    b.Property<int>("EvAttack")
                         .HasColumnType("integer");
 
                     b.Property<int>("EvDefense")

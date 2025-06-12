@@ -1292,6 +1292,10 @@
                 "type": "integer",
                 "format": "int32"
               },
+              "evAttack": {
+                "type": "integer",
+                "format": "int32"
+              },
               "evDefense": {
                 "type": "integer",
                 "format": "int32"
