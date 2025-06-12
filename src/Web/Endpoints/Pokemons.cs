@@ -39,7 +39,7 @@ public class Pokemons : EndpointGroupBase
     {
         var id = await sender.Send(command);
 
-        return TypedResults.Created($"/{nameof(TodoItems)}/{id}", id);
+        return TypedResults.Created($"/{nameof(Pokemons)}/{id}", id);
     }
 
     public async Task<Results<NoContent, BadRequest>> UpdatePokemon(ISender sender, int id,
