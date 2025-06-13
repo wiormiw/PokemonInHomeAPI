@@ -28,6 +28,6 @@ public class DeletePokemonCommandHandler : IRequestHandler<DeletePokemonCommand>
 
         entity.AddDomainEvent(new PokemonDeletedEvent(entity));
 
-        await _context.SaveChangesAsync(cancellationToken);
+        await _context.SaveChangesWithEventsAsync(cancellationToken);
     }
 }

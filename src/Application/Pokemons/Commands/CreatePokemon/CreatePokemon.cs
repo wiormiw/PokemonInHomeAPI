@@ -60,7 +60,7 @@ public class CreatePokemonCommandHandler : IRequestHandler<CreatePokemonCommand,
         
         _context.PokemonSpecies.Add(entity);
         
-        await _context.SaveChangesAsync(cancellationToken);
+        await _context.SaveChangesWithEventsAsync(cancellationToken);
         
         return entity.Id;
     }
