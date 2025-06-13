@@ -9,8 +9,10 @@ namespace Microsoft.Extensions.DependencyInjection.Pokemons.Commands.CatchPokemo
 public record CatchPokemonCommand : IRequest<int>
 {
     public int SpeciesId { get; init; }
-    
+
     public int Level { get; init; } = PokemonConstants.DefaultLevel;
+    
+    public required string Nickname { get; init; }
 }
 
 public class CatchPokemonCommandHandler : IRequestHandler<CatchPokemonCommand, int>
@@ -30,20 +32,20 @@ public class CatchPokemonCommandHandler : IRequestHandler<CatchPokemonCommand, i
         var userId = _currentUser.Id;
         if (userId is null)
             throw new UnauthorizedAccessException(ErrorMessage.UnauthorizedErrorMessage);
-        
+
         var player = await _context.Players
             .FirstOrDefaultAsync(p => p.ApplicationUserId == userId, cancellationToken);
-        
+
         Guard.Against.NotFound(userId, player);
-        
+
         var species = await _context.PokemonSpecies
             .FindAsync(new object[] { request.SpeciesId }, cancellationToken);
-        
+
         Guard.Against.NotFound(request.SpeciesId, species);
 
         var pokemonIvHp = _random.Next(PokemonConstants.MinIVsValue, PokemonConstants.MaxIVsValue + 1);
         var pokemonEvHp = 0;
-        
+
         // Generate random IVs stats (0 - 31)
         var wildPokemon = new Pokemon
         {
@@ -63,7 +65,7 @@ public class CatchPokemonCommandHandler : IRequestHandler<CatchPokemonCommand, i
             EvSpecialDefense = 0,
             CurrentHp = CalculateMaxHp(species.BaseHp, request.Level, pokemonIvHp, pokemonEvHp)
         };
-        
+
         // Assign random moves (up to 4 moves)
         var availableMoves = await _context.Moves
             .Where(m => m.Type == species.Type1 || m.Type == species.Type2)
@@ -81,38 +83,11 @@ public class CatchPokemonCommandHandler : IRequestHandler<CatchPokemonCommand, i
                 })
                 .ToList();
         }
-        
-        // Add wild pokemon to the roster (list of pokemon catch in the wild by user)
-        var playerPokemon = new PlayerPokemon
-        {
-            PlayerId = player.Id,
-            Pokemon = wildPokemon,
-            IsActive = false,
-            Nickname = species.Name,
-            CaughtAt = DateTimeOffset.UtcNow
-        };
-        
-        // Update the pokedex
-        var pokedex = await _context.Pokedexes
-            .FirstOrDefaultAsync(p => p.PlayerId == player.Id && p.SpeciesId == request.SpeciesId, cancellationToken);
 
-        if (pokedex is not null)
-        {
-            pokedex.Seen = true;
-            pokedex.Caught = true;
-        }
-        else
-        {
-            _context.Pokedexes.Add(new Pokedex
-            {
-                PlayerId = player.Id,
-                SpeciesId = request.SpeciesId,
-                Seen = true,
-                Caught = true,
-            });
-        }
-        
-        await _context.SaveChangesAsync(cancellationToken);
+        // Add wild pokemon to the roster (list of pokemon catch in the wild by user)
+        var playerPokemon = player.CatchPokemon(species, wildPokemon, request.Nickname);
+
+        await _context.SaveChangesWithEventsAsync(cancellationToken);
         return wildPokemon.Id;
     }
 
