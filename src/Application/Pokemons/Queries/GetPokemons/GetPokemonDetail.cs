@@ -25,7 +25,8 @@ public class GetPokemonQueryHandler : IRequestHandler<GetPokemonQuery, PokemonDt
     {
         var pokemon = await _context.PokemonSpecies
             .AsNoTracking()
-            .FirstOrDefaultAsync(p => p.Id == request.PokemonId, cancellationToken);
+            .Where(p => p.Id == request.PokemonId)
+            .FirstOrDefaultAsync(cancellationToken);
 
         if (pokemon is null)
         {
