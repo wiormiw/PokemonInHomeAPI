@@ -1,4 +1,5 @@
-﻿using PokemonInHomeAPI.Domain.Entities;
+﻿using Microsoft.EntityFrameworkCore.Infrastructure;
+using PokemonInHomeAPI.Domain.Entities;
 
 namespace PokemonInHomeAPI.Application.Common.Interfaces;
 
@@ -27,12 +28,16 @@ public interface IApplicationDbContext
     DbSet<PlayerItem> PlayerItems { get; }
 
     DbSet<Battle> Battles { get; }
-    
+
     DbSet<BattlePokemon> BattlePokemons { get; }
-    
+
     DbSet<Trade> Trades { get; }
-    
+
     DbSet<TradePokemon> TradePokemons { get; }
-    
+
     Task<int> SaveChangesAsync(CancellationToken cancellationToken);
+
+    Task<int> SaveChangesWithEventsAsync(CancellationToken cancellationToken);
+
+    DatabaseFacade Database { get; }
 }

@@ -4,13 +4,19 @@ using PokemonInHomeAPI.Domain.Entities;
 using PokemonInHomeAPI.Infrastructure.Identity;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Infrastructure;
+using MediatR;
+using PokemonInHomeAPI.Domain.Common;
 
 namespace PokemonInHomeAPI.Infrastructure.Data;
 
 public class ApplicationDbContext : IdentityDbContext<ApplicationUser>, IApplicationDbContext
 {
-    public ApplicationDbContext(DbContextOptions<ApplicationDbContext> options) : base(options)
+    private readonly IMediator _mediator;
+
+    public ApplicationDbContext(DbContextOptions<ApplicationDbContext> options, IMediator mediator) : base(options)
     {
+        _mediator = mediator;
     }
 
     public DbSet<TodoList> TodoLists => Set<TodoList>();
@@ -28,10 +34,37 @@ public class ApplicationDbContext : IdentityDbContext<ApplicationUser>, IApplica
     public DbSet<BattlePokemon> BattlePokemons => Set<BattlePokemon>();
     public DbSet<Trade> Trades => Set<Trade>();
     public DbSet<TradePokemon> TradePokemons => Set<TradePokemon>();
+    public new DatabaseFacade Database => base.Database;
 
     protected override void OnModelCreating(ModelBuilder builder)
     {
         base.OnModelCreating(builder);
         builder.ApplyConfigurationsFromAssembly(Assembly.GetExecutingAssembly());
+    }
+
+    public async Task<int> SaveChangesWithEventsAsync(CancellationToken cancellationToken)
+    {
+        await DispatchDomainEventAsync();
+
+        return await base.SaveChangesAsync(cancellationToken);
+    }
+
+    private async Task DispatchDomainEventAsync()
+    {
+        var domainEntities = ChangeTracker.Entries<BaseEntity>()
+            .Where(e => e.Entity.DomainEvents.Any())
+            .Select(e => e.Entity);
+
+        var domainEvents = domainEntities
+            .SelectMany(e => e.DomainEvents)
+            .ToList();
+
+        // Clear domain events
+        domainEntities.ToList().ForEach(e => e.ClearDomainEvents());
+
+        foreach (var domainEvent in domainEvents)
+        {
+            await _mediator.Publish(domainEvent);
+        }
     }
 }
