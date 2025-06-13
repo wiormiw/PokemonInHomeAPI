@@ -10,5 +10,8 @@ public class CatchPokemonCommandValidator : AbstractValidator<CatchPokemonComman
             .NotEmpty().WithMessage(ValidationMessage.RequiredMessage)
             .GreaterThanOrEqualTo(5).WithMessage(ValidationMessage.MinPokemonLevelMessage)
             .LessThanOrEqualTo(50).WithMessage(ValidationMessage.MaxPokemonLevelMessage);
+
+        RuleFor(v => v.Nickname)
+            .NotEmpty().WithMessage(ValidationMessage.RequiredMessage);
     } 
 }
