@@ -8,9 +8,19 @@ public class Trade : BaseAuditableEntity
     
     public DateTimeOffset TradeDate { get; set; } = DateTimeOffset.Now;
 
+    public TradeStatus TradeStatus { get; set; } = TradeStatus.Offered;
+
     public Player? Player1 { get; set; }
 
     public Player? Player2 { get; set; }
     
-    public ICollection<TradePokemon> TradePokemons { get; set; } = new List<TradePokemon>();
+    public ISet<TradePokemon> TradePokemons { get; set; } = new HashSet<TradePokemon>();
+}
+
+public enum TradeStatus
+{
+    Offered,
+    Completed,
+    Cancelled,
+    Rejected
 }
