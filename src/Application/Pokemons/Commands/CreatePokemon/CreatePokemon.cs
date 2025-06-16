@@ -10,9 +10,9 @@ namespace PokemonInHomeAPI.Application.Pokemons.Commands.CreatePokemon;
 [Authorize(Roles = Roles.Administrator)]
 public record CreatePokemonCommand : IRequest<int>
 {
-    public string? Name { get; init; }
+    required public string Name { get; init; }
     
-    public string? Type1 { get; init; }
+    required public string Type1 { get; init; }
     
     public string? Type2 { get; init; }
    
