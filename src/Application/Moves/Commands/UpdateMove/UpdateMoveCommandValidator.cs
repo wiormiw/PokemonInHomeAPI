@@ -1,5 +1,6 @@
 using PokemonInHomeAPI.Application.Common.Interfaces;
 using PokemonInHomeAPI.Domain.Constants;
+using PokemonInHomeAPI.Domain.Entities;
 using PokemonInHomeAPI.Domain.ValueObjects;
 
 namespace PokemonInHomeAPI.Application.Moves.Commands.UpdateMove;
@@ -17,8 +18,6 @@ public class UpdateMoveCommandValidator : AbstractValidator<UpdateMoveCommand>
             .WithMessage(ValidationMessage.PositiveMessage);
         
         RuleFor(v => v.Name)
-            .NotEmpty()
-            .WithMessage(ValidationMessage.RequiredMessage)
             .MaximumLength(255)
             .WithMessage(ValidationMessage.MaxLength255Message)
             .MustAsync(BeUniqueName)
@@ -26,9 +25,11 @@ public class UpdateMoveCommandValidator : AbstractValidator<UpdateMoveCommand>
             .WithErrorCode("Unique");
 
         RuleFor(v => v.Type)
-            .NotEmpty()
-            .WithMessage(ValidationMessage.RequiredMessage)
             .Must(t => t is null || PokemonType.SupportedTypes.Any(st => st.Name == t))
+            .WithMessage(ValidationMessage.UnsupportedTypeMessage);
+        
+        RuleFor(v => v.Category)
+            .Must(c => string.IsNullOrWhiteSpace(c) || BeValidMovesType(c))
             .WithMessage(ValidationMessage.UnsupportedTypeMessage);
         
         RuleFor(v => v.Power)
@@ -50,11 +51,17 @@ public class UpdateMoveCommandValidator : AbstractValidator<UpdateMoveCommand>
             .WithMessage(ValidationMessage.MaxValue255Message);
     }
     
-    public async Task<bool> BeUniqueName(UpdateMoveCommand model, string name,
+    private async Task<bool> BeUniqueName(UpdateMoveCommand model, string name,
         CancellationToken cancellationToken)
     {
         return !await _context.Moves
             .Where(mv => mv.Id != model.Id)
             .AnyAsync(mv => mv.Name == name, cancellationToken);
+    }
+    
+    private bool BeValidMovesType(string category)
+    {
+        return Enum.TryParse<MovesType>(category, ignoreCase: true, out var parsed)
+               && Enum.IsDefined(typeof(MovesType), parsed);
     }
 }
