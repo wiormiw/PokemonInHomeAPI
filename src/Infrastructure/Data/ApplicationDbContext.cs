@@ -53,7 +53,8 @@ public class ApplicationDbContext : IdentityDbContext<ApplicationUser>, IApplica
     {
         var domainEntities = ChangeTracker.Entries<BaseEntity>()
             .Where(e => e.Entity.DomainEvents.Any())
-            .Select(e => e.Entity);
+            .Select(e => e.Entity)
+            .ToList();
 
         var domainEvents = domainEntities
             .SelectMany(e => e.DomainEvents)
