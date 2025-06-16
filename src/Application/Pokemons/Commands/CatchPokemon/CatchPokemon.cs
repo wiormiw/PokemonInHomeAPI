@@ -3,14 +3,14 @@ using PokemonInHomeAPI.Application.Common.Security;
 using PokemonInHomeAPI.Domain.Constants;
 using PokemonInHomeAPI.Domain.Entities;
 
-namespace Microsoft.Extensions.DependencyInjection.Pokemons.Commands.CatchPokemon;
+namespace PokemonInHomeAPI.Application.Pokemons.Commands.CatchPokemon;
 
 [Authorize(Roles = Roles.Player)]
 public record CatchPokemonCommand : IRequest<int>
 {
     public int SpeciesId { get; init; }
 
-    public int Level { get; init; } = PokemonConstants.DefaultLevel;
+    public int Level { get; init; }
     
     public required string Nickname { get; init; }
 }
