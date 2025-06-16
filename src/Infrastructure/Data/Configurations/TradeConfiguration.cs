@@ -12,6 +12,9 @@ public class TradeConfiguration : IEntityTypeConfiguration<Trade>
 
         builder.Property(t => t.TradeDate)
             .IsRequired();
+        
+        builder.Property(t => t.TradeStatus)
+            .IsRequired();
 
         builder.HasOne(t => t.Player1)
             .WithMany(p => p.Player1Trades)
@@ -25,6 +28,7 @@ public class TradeConfiguration : IEntityTypeConfiguration<Trade>
 
         builder.HasMany(t => t.TradePokemons)
             .WithOne(tp => tp.Trade)
-            .HasForeignKey(tp => tp.TradeId);
+            .HasForeignKey(tp => tp.TradeId)
+            .OnDelete(DeleteBehavior.Cascade);
     }
 }
