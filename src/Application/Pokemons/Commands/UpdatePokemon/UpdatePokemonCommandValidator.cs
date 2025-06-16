@@ -17,8 +17,6 @@ public class UpdatePokemonCommandValidator : AbstractValidator<UpdatePokemonComm
                 .WithMessage(ValidationMessage.PositiveMessage);
 
         RuleFor(v => v.Name)
-            .NotEmpty()
-            .WithMessage(ValidationMessage.RequiredMessage)
             .MaximumLength(255)
             .WithMessage(ValidationMessage.MaxLength255Message)
             .MustAsync(BeUniqueName)
@@ -26,8 +24,6 @@ public class UpdatePokemonCommandValidator : AbstractValidator<UpdatePokemonComm
             .WithErrorCode("Unique");
 
         RuleFor(v => v.Type1)
-            .NotEmpty()
-            .WithMessage(ValidationMessage.RequiredMessage)
             .Must(t => t is null || PokemonType.SupportedTypes.Any(st => st.Name == t))
             .WithMessage(ValidationMessage.UnsupportedTypeMessage);
 
