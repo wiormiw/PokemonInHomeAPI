@@ -10,9 +10,11 @@ namespace PokemonInHomeAPI.Application.Moves.Commands.CreateMove;
 [Authorize(Roles = Roles.Administrator)]
 public record CreateMoveCommand : IRequest<int>
 {
-    public string? Name { get; init; }
+    required public string Name { get; init; }
     
-    public string? Type { get; init; }
+    required public string Type { get; init; }
+    
+    required public string Category { get; init; }
     
     public int Power { get; init; }
     
@@ -39,6 +41,7 @@ public class CreateMoveCommandHandler : IRequestHandler<CreateMoveCommand, int>
         {
             Name = request.Name,
             Type = PokemonType.From(request.Type),
+            Category = Enum.Parse<MovesType>(request.Category, ignoreCase: true),
             Power = request.Power,
             Accuracy = request.Accuracy,
             Pp = request.Pp,
