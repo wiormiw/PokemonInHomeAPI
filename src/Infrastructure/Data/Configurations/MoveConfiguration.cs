@@ -20,6 +20,9 @@ public class MoveConfiguration : IEntityTypeConfiguration<Move>
                 .HasColumnType("text")
                 .IsRequired();
         });
+        
+        builder.Property(m => m.Category)
+            .IsRequired();
 
         builder.Property(m => m.Power);
 
