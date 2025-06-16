@@ -1,4 +1,5 @@
 ﻿using System.Data.Common;
+using MediatR;
 using PokemonInHomeAPI.Infrastructure.Data;
 using Microsoft.Data.SqlClient;
 using Microsoft.EntityFrameworkCore;
@@ -44,7 +45,9 @@ public class PostgreSQLTestcontainersTestDatabase : ITestDatabase
             .ConfigureWarnings(warnings => warnings.Log(RelationalEventId.PendingModelChangesWarning))
             .Options;
 
-        var context = new ApplicationDbContext(options);
+        var mockMediator = new Mock<IMediator>();
+        
+        var context = new ApplicationDbContext(options, mockMediator.Object);
 
         await context.Database.MigrateAsync();
 
