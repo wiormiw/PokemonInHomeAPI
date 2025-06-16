@@ -266,10 +266,17 @@ namespace PokemonInHomeAPI.Infrastructure.Data.Migrations
                         .HasPrecision(3)
                         .HasColumnType("integer");
 
+                    b.Property<int>("Category")
+                        .HasColumnType("integer");
+
                     b.Property<DateTimeOffset>("Created")
                         .HasColumnType("timestamp with time zone");
 
                     b.Property<string>("CreatedBy")
+                        .HasColumnType("text");
+
+                    b.Property<string>("Effect")
+                        .IsRequired()
                         .HasColumnType("text");
 
                     b.Property<DateTimeOffset>("LastModified")
@@ -667,6 +674,9 @@ namespace PokemonInHomeAPI.Infrastructure.Data.Migrations
 
                     b.Property<DateTimeOffset>("TradeDate")
                         .HasColumnType("timestamp with time zone");
+
+                    b.Property<int>("TradeStatus")
+                        .HasColumnType("integer");
 
                     b.HasKey("Id");
 
