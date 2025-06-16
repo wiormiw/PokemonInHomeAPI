@@ -1,5 +1,6 @@
 using PokemonInHomeAPI.Application.Common.Interfaces;
 using PokemonInHomeAPI.Domain.Constants;
+using PokemonInHomeAPI.Domain.Entities;
 using PokemonInHomeAPI.Domain.ValueObjects;
 
 namespace PokemonInHomeAPI.Application.Moves.Commands.CreateMove;
@@ -27,6 +28,12 @@ public class CreateMoveCommandValidator : AbstractValidator<CreateMoveCommand>
             .Must(t => t is null || PokemonType.SupportedTypes.Any(st => st.Name == t))
             .WithMessage(ValidationMessage.UnsupportedTypeMessage);
         
+        RuleFor(v => v.Category)
+            .NotEmpty()
+            .WithMessage(ValidationMessage.RequiredMessage)
+            .Must(BeValidMovesType)
+            .WithMessage(ValidationMessage.UnsupportedTypeMessage);
+        
         RuleFor(v => v.Power)
             .GreaterThan(0)
             .WithMessage(ValidationMessage.PositiveMessage)
@@ -46,10 +53,16 @@ public class CreateMoveCommandValidator : AbstractValidator<CreateMoveCommand>
             .WithMessage(ValidationMessage.MaxValue255Message);
     }
     
-    public async Task<bool> BeUniqueName(CreateMoveCommand model, string name,
+    private async Task<bool> BeUniqueName(CreateMoveCommand model, string name,
         CancellationToken cancellationToken)
     {
         return !await _context.Moves
             .AnyAsync(mv => mv.Name == name, cancellationToken);
+    }
+    
+    private bool BeValidMovesType(string category)
+    {
+        return Enum.TryParse<MovesType>(category, ignoreCase: true, out var parsed)
+               && Enum.IsDefined(typeof(MovesType), parsed);
     }
 }
