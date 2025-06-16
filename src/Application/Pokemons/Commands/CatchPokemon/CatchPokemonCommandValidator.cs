@@ -1,6 +1,6 @@
 using PokemonInHomeAPI.Domain.Constants;
 
-namespace Microsoft.Extensions.DependencyInjection.Pokemons.Commands.CatchPokemon;
+namespace PokemonInHomeAPI.Application.Pokemons.Commands.CatchPokemon;
 
 public class CatchPokemonCommandValidator : AbstractValidator<CatchPokemonCommand>
 {
